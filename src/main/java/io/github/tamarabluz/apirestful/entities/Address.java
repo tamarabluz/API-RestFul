@@ -21,6 +21,8 @@ public class Address {
     private String cep;
     @Column
     private int numero;
+    @Column(nullable = false)
+    private String cidade;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "people_id")
     private People people;
