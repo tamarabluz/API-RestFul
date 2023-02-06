@@ -5,5 +5,6 @@ import io.github.tamarabluz.apirestful.entities.People;
 
 public interface PeopleService {
 
-    People create(People people);
+    PeopleRequest create(PeopleRequest people);
+
 }

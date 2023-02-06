@@ -7,7 +7,6 @@ import io.github.tamarabluz.apirestful.services.PeopleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 
 @Service
 public class PeopleServiceImpl implements PeopleService {
@@ -19,10 +18,13 @@ public class PeopleServiceImpl implements PeopleService {
         this.peopleRepository = peopleRepository;
     }
 
-            @Transactional
-            public People create (People people){
-                return peopleRepository.save(people);
-            }
+    @Override
+    public PeopleRequest create(PeopleRequest people) {
+        return mapper.map(
+                peopleRepository.save(mapper.map(people, People.class)),
+                PeopleRequest.class);
     }
+}
+
 
 

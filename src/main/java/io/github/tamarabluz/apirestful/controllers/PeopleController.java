@@ -22,13 +22,11 @@ public class PeopleController {
     private final PeopleService service;
 
     @PostMapping
-    public ResponseEntity create(@RequestBody @Valid PeopleRequest request){
-        var people = request.toModel();
-        service.create(people);
+    public ResponseEntity<PeopleRequest> create(@RequestBody @Valid PeopleRequest people){
         URI headerLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .query("id={id}")
-                .buildAndExpand(people.getId())
+                .buildAndExpand(service.create(people).getId())
                 .toUri();
         return ResponseEntity.created(headerLocation).build();
     }
