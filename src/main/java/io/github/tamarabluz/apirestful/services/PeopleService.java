@@ -20,5 +20,5 @@ public interface PeopleService {
 
     PeopleRequest addAddressToPeople(Long id, AddressRequest address);
 
-    List<AddressRequest> findAllAddressesToPerson(Long id);
+    List<AddressRequest> findAllAddressesToPeople(Long id);
 }

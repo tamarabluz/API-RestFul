@@ -105,9 +105,9 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public List<AddressRequest> findAllAddressesToPerson(Long id) {
+    public List<AddressRequest> findAllAddressesToPeople(Long id) {
         peopleRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
-        List<Address> addresses = addressRepository.findAddressByPersonId(id);
+        List<Address> addresses = addressRepository.findAddressByPeopleId(id);
         return addresses.stream().map(a -> mapper.map(a, AddressRequest.class)).collect(Collectors.toList());
     }
 }

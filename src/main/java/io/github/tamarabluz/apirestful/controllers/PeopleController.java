@@ -60,7 +60,7 @@ public class PeopleController {
     }
 
     @GetMapping("/{addresses}")
-    public ResponseEntity<List<AddressRequest>> findAllAddressToPerson(@PathVariable Long id) {
-        return ResponseEntity.ok().body(service.findAllAddressesToPerson(id));
+    public ResponseEntity<List<AddressRequest>> findAllAddressToPeople(@PathVariable Long id) {
+        return ResponseEntity.ok().body(service.findAllAddressesToPeople(id));
     }
 }
