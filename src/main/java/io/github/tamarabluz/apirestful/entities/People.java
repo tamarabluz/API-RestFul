@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
-
+import java.util.ArrayList;
 
 @Data
 @AllArgsConstructor

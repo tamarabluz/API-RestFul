@@ -18,7 +18,6 @@ public class PeopleServiceImpl implements PeopleService {
         this.peopleRepository = peopleRepository;
     }
 
-
     @Override
     public PeopleRequest create(PeopleRequest people) {
         return mapper.map(
@@ -26,5 +25,6 @@ public class PeopleServiceImpl implements PeopleService {
                 PeopleRequest.class);
     }
 }
+
 
 
