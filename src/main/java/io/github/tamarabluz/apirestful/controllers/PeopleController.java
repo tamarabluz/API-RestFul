@@ -2,6 +2,7 @@ package io.github.tamarabluz.apirestful.controllers;
 
 import io.github.tamarabluz.apirestful.entities.dtos.request.PeopleRequest;
 import io.github.tamarabluz.apirestful.services.PeopleService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

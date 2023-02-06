@@ -9,10 +9,13 @@ public interface PeopleService {
 
     PeopleRequest create(PeopleRequest people);
 
+<<<<<<< HEAD
     List<PeopleRequest> findAll();
     PeopleRequest findById(Long id);
 
     PeopleRequest update(Long id, PeopleRequest people);
 
     void delete(Long id);
+=======
+>>>>>>> main
 }
