@@ -1,4 +1,4 @@
-package io.github.tamarabluz.apirestful.dtos.request;
+package io.github.tamarabluz.apirestful.entities.dtos.request;
 
 
 import lombok.AllArgsConstructor;
