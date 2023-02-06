@@ -21,10 +21,13 @@ public class Address implements Serializable {
     @Column
     private String cep;
     @Column
-    private int numero;
+    private Long numero;
     @Column(nullable = false)
     private String cidade;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "people_id")
     private People people;
+
+    @Column(nullable = false)
+    private Boolean isPrincipal = false;
 }
