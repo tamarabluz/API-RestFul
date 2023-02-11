@@ -1,4 +1,4 @@
-package io.github.tamarabluz.apirestful.config;
+package io.github.tamarabluz.apirestful.config.modelmapper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
