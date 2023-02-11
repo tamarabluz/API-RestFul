@@ -1,15 +1,16 @@
 package io.github.tamarabluz.apirestful.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import io.github.tamarabluz.apirestful.entities.dtos.request.PeopleRequest;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+
 
 @Data
 @AllArgsConstructor

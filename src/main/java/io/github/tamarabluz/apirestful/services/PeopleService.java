@@ -18,7 +18,7 @@ public interface PeopleService {
 
     void delete(Long id);
 
-    PeopleRequest addAddressToPeople(Long id, AddressRequest address);
+   PeopleRequest addAddressToPeople(Long id, AddressRequest address);
 
     List<AddressRequest> findAllAddressesToPeople(Long id);
 }

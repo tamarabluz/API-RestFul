@@ -9,6 +9,7 @@ import io.github.tamarabluz.apirestful.repositories.PeopleRepository;
 import io.github.tamarabluz.apirestful.services.PeopleService;
 import io.github.tamarabluz.apirestful.services.exceptions.ObjectNotFoundException;
 import io.github.tamarabluz.apirestful.services.exceptions.RuleBusinessException;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+@AllArgsConstructor
 @Service
 public class PeopleServiceImpl implements PeopleService {
     private final ModelMapper mapper;
@@ -24,18 +26,19 @@ public class PeopleServiceImpl implements PeopleService {
     private final AddressRepository addressRepository;
 
 
-    public PeopleServiceImpl(ModelMapper mapper, PeopleRepository peopleRepository, AddressRepository addressRepository) {
-        this.mapper = mapper;
-        this.peopleRepository = peopleRepository;
-        this.addressRepository = addressRepository;
+    @Override
+    public PeopleRequest create(PeopleRequest peopleRequest) {
+        People people = mapper.map(peopleRequest, People.class);
+        if (people != null) {
+            people = peopleRepository.save(people);
+        }
+        if (people != null) {
+            return mapper.map(people, PeopleRequest.class);
+        } else {
+            return null;
+        }
     }
 
-    @Override
-    public PeopleRequest create(PeopleRequest people) {
-        return mapper.map(
-                peopleRepository.save(mapper.map(people, People.class)),
-                PeopleRequest.class);
-    }
 
     @Override
     public List<PeopleRequest> findAll() {
@@ -47,21 +50,22 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public PeopleRequest findById(Long id) {
-        return mapper.map(
-                peopleRepository.findById(id).orElseThrow(
-                        () -> new ObjectNotFoundException("Objeto não encontrado")
-                ),
-                PeopleRequest.class);
+        People people = peopleRepository.findById(id).orElseThrow(
+                () -> new ObjectNotFoundException("Objeto não encontrado")
+        );
+        return mapper.map(people, PeopleRequest.class);
     }
 
     @Override
-    public PeopleRequest update(Long id, PeopleRequest people) {
-        peopleRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundException("Objeto não encontrado"));
+    public PeopleRequest update(Long id, PeopleRequest peopleRequest) {
+        People people = peopleRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Pessoa com id " + id + " não encontrada."));
+
+        mapper.map(peopleRequest, people);
         people.setId(id);
-        return mapper.map(
-                peopleRepository.save(mapper.map(people, People.class)), PeopleRequest.class);
+        return mapper.map(peopleRepository.save(people), PeopleRequest.class);
     }
+
 
     @Override
     public void delete(Long id) {
@@ -78,24 +82,26 @@ public class PeopleServiceImpl implements PeopleService {
         );
 
         Address addressSaved = addressRepository.save(mapper.map(address, Address.class));
-
         addressSaved.setPeople(People.builder().id(id).build());
 
-        if (people.getAddresses().size() <= 4) {
-            if (people.getAddresses().isEmpty()) {
-                addressSaved.setIsPrincipal(true);
-            }
-            for (int i = 0; i < people.getAddresses().size(); i++) {
-                if (people.getAddresses().get(i).getIsPrincipal() && addressSaved.getIsPrincipal()) {
-                    people.getAddresses().get(i).setIsPrincipal(false);
-                }
-                if (people.getAddresses().get(i).getLogradouro().equals(addressSaved.getLogradouro())
-                        && people.getAddresses().get(i).getNumero().equals(addressSaved.getNumero())) {
-                    throw new RuleBusinessException("O número da casa e o logradouro já existe no sistema para essa pessoa.");
-                }
-            }
-        } else {
+        if (people.getAddresses().size() >= 5) {
             throw new RuleBusinessException("Você já preencheu o número máximo de endereços.");
+        }
+
+        boolean hasPrincipal = false;
+        for (Address existingAddress : people.getAddresses()) {
+            if (existingAddress.getIsPrincipal()) {
+                hasPrincipal = true;
+            }
+
+            if (existingAddress.getLogradouro().equals(addressSaved.getLogradouro())
+                    && existingAddress.getNumero().equals(addressSaved.getNumero())) {
+                throw new RuleBusinessException("O número da casa e o logradouro já existem no sistema para essa pessoa.");
+            }
+        }
+
+        if (!hasPrincipal) {
+            addressSaved.setIsPrincipal(true);
         }
 
         people.getAddresses().add(addressSaved);
@@ -103,6 +109,9 @@ public class PeopleServiceImpl implements PeopleService {
         People peopleSaved = peopleRepository.save(people);
         return mapper.map(peopleSaved, PeopleRequest.class);
     }
+
+
+
 
     @Override
     public List<AddressRequest> findAllAddressesToPeople(Long id) {

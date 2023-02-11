@@ -3,7 +3,7 @@ package io.github.tamarabluz.apirestful.controllers;
 import io.github.tamarabluz.apirestful.entities.dtos.request.AddressRequest;
 import io.github.tamarabluz.apirestful.entities.dtos.request.PeopleRequest;
 import io.github.tamarabluz.apirestful.services.PeopleService;
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,8 @@ public class PeopleController {
 
     private final PeopleService service;
 
-    @PostMapping
+    @PostMapping(produces="application/json", consumes="application/json")
+    @Operation(summary = "Created Person.")
     public ResponseEntity<PeopleRequest> create(@RequestBody @Valid PeopleRequest people) {
         URI headerLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -31,35 +32,40 @@ public class PeopleController {
         return ResponseEntity.created(headerLocation).build();
     }
 
-    @GetMapping
+    @GetMapping(produces="application/json")
+    @Operation(summary = "Return all People.")
     public ResponseEntity<List<PeopleRequest>> findAll() {
         return ResponseEntity.ok().body(service.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = "application/json")
+    @Operation(summary = "Return one person by Id.")
     public ResponseEntity<PeopleRequest> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", produces = "application/json", consumes="application/json")
+    @Operation(summary = "Update person by Id.")
     public ResponseEntity<PeopleRequest> update(@PathVariable Long id, @RequestBody @Valid PeopleRequest people) {
         service.update(id, people);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
+    @Operation(summary = "Delete person by Id.")
     public ResponseEntity<PeopleRequest> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<PeopleRequest> addAddressTopeopple(@PathVariable("id") Long id, @RequestBody @Valid AddressRequest address) {
+    @PatchMapping(value = "/{id}/add-address", produces = "application/json", consumes="application/json")
+    @Operation(summary = "Add address for person.")
+    public ResponseEntity<PeopleRequest> addAddressToPeopple(@PathVariable("id") Long id, @RequestBody @Valid AddressRequest address) {
         service.addAddressToPeople(id, address);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{addresses}")
+    @GetMapping(value = "/{id}/addresses", produces = "application/json")
     public ResponseEntity<List<AddressRequest>> findAllAddressToPeople(@PathVariable Long id) {
         return ResponseEntity.ok().body(service.findAllAddressesToPeople(id));
     }
